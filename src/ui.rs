@@ -33,8 +33,11 @@ pub const SHOW_HIPER_WINDOW: Selector = Selector::new("show-hiper-window");
 fn main_page() -> Box<dyn Widget<AppState>> {
     Flex::column()
         // .with_child(label::new("HiPer Bridge").with_font(typography::SUBHEADER))
-        .with_child(label::new("轻快若风 x 安如磐石 - 最佳跨区域组网方案"))
+        .with_child(label::new("本联机模块与PMCL互联互通"))
+        .with_child(label::new("房主与加入方的暗号必须一致"))
+        .with_child(label::new("暗号越长越复杂越安全越不会重复被误入"))
         .with_spacer(10.0)
+        .with_child(label::new("永久免费 官网:pmcl.fun"))
         .with_flex_child(
             label
                 ::dynamic(|data: &AppState, _| data.warning.to_owned())
@@ -72,7 +75,7 @@ fn main_page() -> Box<dyn Widget<AppState>> {
                                 let _ = write!(run_time_formated, "{:02}:{:02}", min, sec);
 
                                 format!(
-                                    "通信令牌: {}\n网络地址: {}\n运行时间: {}",
+                                    "联机暗号: {}\n网络地址: {}\n运行时间: {}",
                                     data.token,
                                     data.ip,
                                     run_time_formated
@@ -96,7 +99,7 @@ fn main_page() -> Box<dyn Widget<AppState>> {
                                 {
                                     let _ = cb.set_contents(
                                         format!(
-                                            "我正在邀请你加入到我的网络\n\n我的网络地址是 {} \n请使用通信令牌 {}\n通过HiPer客户端加入\n\n客户端下载地址 l-l.cn",
+                                            "我正在使用PMCL邀请你加入到我的世界\n\n连接地址是 {} \n请使用联机暗号 {}\n通过PMCL加入游戏\n\n联机启动器下载地址为 pmcl.fun",
                                             data.ip,
                                             data.token
                                         )
@@ -111,7 +114,7 @@ fn main_page() -> Box<dyn Widget<AppState>> {
                                 {
                                     let _ = cb.set_contents(
                                         format!(
-                                            "我正在邀请你加入到我的网络\n\n我的网络地址是 {} \n请使用通信令牌 {}\n通过HiPer客户端加入\n\n客户端下载地址 l-l.cn",
+                                            "我正在使用PMCL邀请你加入到我的世界\n\n连接地址是 {} \n请使用联机暗号 {}\n通过PMCL加入游戏\n\n联机启动器下载地址为 pmcl.fun",
                                             data.ip,
                                             data.token
                                         )
@@ -126,7 +129,7 @@ fn main_page() -> Box<dyn Widget<AppState>> {
                                 {
                                     let _ = cb.set_contents(
                                         format!(
-                                            "我正在邀请你加入到我的网络\n\n我的网络地址是 {} \n请使用通信令牌 {}\n通过HiPer客户端加入\n\n客户端下载地址 l-l.cn",
+                                            "我正在使用PMCL邀请你加入到我的世界\n\n连接地址是 {} \n请使用联机暗号 {}\n通过PMCL加入游戏\n\n联机启动器下载地址为 pmcl.fun",
                                             data.ip,
                                             data.token
                                         )
@@ -140,7 +143,7 @@ fn main_page() -> Box<dyn Widget<AppState>> {
         )
         .with_child(
             label
-                ::new("通信令牌")
+                ::new("联机暗号")
                 .show_if(|data: &AppState, _| data.ip.is_empty())
                 .padding((0.0, 5.0))
         )
@@ -198,97 +201,11 @@ fn main_page() -> Box<dyn Widget<AppState>> {
                         .disabled_if(|data: &AppState, _| data.token.trim().is_empty()),
                     1.0
                 )
-                .with_spacer(10.0)
-                .with_child(
-                    IconButton::new(crate::icons::SETTINGS).on_click(|ctx, _, _| {
-                        ctx.submit_command(ENABLE_BACK_PAGE.with(true));
-                        ctx.submit_command(PUSH_PAGE.with("setting"));
-                    })
-                )
                 .must_fill_main_axis(true)
         )
         // .must_fill_main_axis(true)
         .cross_axis_alignment(widget::CrossAxisAlignment::Fill)
         .padding((10.0, 10.0))
-        .boxed()
-}
-
-fn setting_page() -> Box<dyn Widget<AppState>> {
-    Flex::column()
-        .with_child(label::new("TAP / TUN"))
-        .with_spacer(5.0)
-        .with_child(
-            ToggleSwitch::new()
-                .lens(AppState::use_tun)
-                .disabled_if(|data: &AppState, _| !data.ip.is_empty())
-        )
-        .with_spacer(10.0)
-        .with_child(label::new("优先模式"))
-        .with_spacer(5.0)
-        .with_child(
-            ToggleSwitch::new()
-                .lens(AppState::fast_mode)
-                .disabled_if(|data: &AppState, _| !data.ip.is_empty())
-        )
-        .with_spacer(10.0)
-        .with_child(label::new("多播优化"))
-        .with_spacer(5.0)
-        .with_child(
-            ToggleSwitch::new()
-                .lens(AppState::use_igmp)
-                .disabled_if(|data: &AppState, _| !data.ip.is_empty())
-        )
-        .with_spacer(10.0)
-        .with_child(label::new("TCP模式"))
-        .with_spacer(5.0)
-        .with_child(
-            ToggleSwitch::new()
-                .lens(AppState::use_tcp)
-                .disabled_if(|data: &AppState, _| !data.ip.is_empty())
-        )
-        .with_spacer(10.0)
-        .with_child(label::new("调试模式"))
-        .with_spacer(5.0)
-        .with_child(
-            ToggleSwitch::new()
-                .lens(AppState::debug_mode)
-                .disabled_if(|data: &AppState, _| !data.ip.is_empty())
-        )
-        .with_spacer(10.0)
-        .with_child(label::new("崩溃重启"))
-        .with_spacer(5.0)
-        .with_child(ToggleSwitch::new().lens(AppState::auto_restart))
-        .with_spacer(10.0)
-        .with_child(label::new("单进程模式"))
-        .with_spacer(5.0)
-        .with_child(ToggleSwitch::new().lens(AppState::kill_hiper_when_start))
-        .with_spacer(10.0)
-        .with_child(
-            Button::new("打开工作目录").on_click(|_, _, _| {
-                if let Ok(hiper_dir) = get_hiper_dir() {
-                    open_url(hiper_dir.to_string_lossy().to_string().as_str());
-                }
-            })
-        )
-        .with_spacer(10.0)
-        .with_child(label::new("关于"))
-        .with_spacer(10.0)
-        .with_child(label::new("HiPer Bridge v0.0.8"))
-        .with_child(label::new("轻量级 HiPer 可视化启动器"))
-        .with_spacer(10.0)
-        .with_child(label::new("HiPer / Matrix / VLAN"))
-        .with_child(label::new("一款轻量、敏捷、去中心化的跨区域组网系统"))
-        .with_spacer(10.0)
-        // .with_child(
-        //     Button::new("使用帮助").on_click(|_, _, _| {
-        //         open_url("https://www.yuque.com/ffip/hiper/hb");
-        //     })
-        // )
-        .cross_axis_alignment(widget::CrossAxisAlignment::Fill)
-        .padding((10.0, 10.0))
-        .scroll()
-        .vertical()
-        .expand()
         .boxed()
 }
 
@@ -414,7 +331,6 @@ pub fn ui_builder() -> impl Widget<AppState> {
     AppWrapper::new({
         let mut pager = PageSwitcher::new();
         pager.add_page("main", Box::new(main_page));
-        pager.add_page("setting", Box::new(setting_page));
         #[cfg(target_os = "macos")]
         {
             pager.add_page("mac-init", Box::new(mac_init));
